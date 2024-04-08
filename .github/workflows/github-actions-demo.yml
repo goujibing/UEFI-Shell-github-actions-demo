@@ -1,51 +1,22 @@
-name: github-actions-demo
-
-on:
-  push:
-    tags:
-      - 'v**'
-
-permissions:
-  contents: write
-
+name: Hello World
+on: push
 jobs:
-  build-and-deploy:
+  my_first_job:
+    name: My first job
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2.3.1
-        with:
-          persist-credentials: false
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v1
-        with:
-          node-version: 18.x
-
-      - name: Install yarn and pkg
-        run: |
-          npm install -g yarn
-          npm install -g pkg
-
-      - name: Clone electron/asar and prepare
-        run: |
-          git clone https://github.com/electron/asar.git
-          cd asar
-          yarn install
-          pkg .
-
-      - name: Determine eleron/asar package version through git tags
-        id: version
-        run: |
-          cd asar
-          echo "version=$(git describe --tags --abbrev=0)" >> $GITHUB_OUTPUT
-
-      - name: Release
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: ${{ steps.version.outputs.version }}
-          files: ./asar/asar-*
-          name: ${{ steps.version.outputs.version }}
-          token: ${{ secrets.GITHUB_TOKEN }}
-        env:
-          GITHUB_REPOSITORY: async3619/asar-exec
+    - name: checkout
+      uses: actions/checkout@master
+    - name: Run a single-line script
+      run: echo "Hello World!"
+  my_second_job:
+    name: My second job
+    runs-on: macos-latest
+    steps:
+    - name: Run a multi-line script
+      env:
+        MY_VAR: Hello World!
+        MY_NAME: P3TERX
+      run: |
+        echo $MY_VAR
+        echo My name is $MY_NAME
